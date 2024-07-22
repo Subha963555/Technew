@@ -1,3 +1,5 @@
+require('dotenv').config(); // Load environment variables from .env file
+
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -8,7 +10,8 @@ const FormData = require('./models/formDataSchema');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key'; 
+const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
+const MONGODB_URI = process.env.MONGODB_URI; // Ensure this is defined in your .env file
 
 // Import route handlers
 const {
@@ -25,7 +28,7 @@ const {
 
 // CORS configuration
 const corsOptions = {
-  origin: 'http://localhost:3000', // Update based on your frontend URL
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000', // Update based on your frontend URL
   credentials: true,
 };
 
@@ -33,6 +36,11 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+if (!MONGODB_URI) {
+  console.error('MONGODB_URI is not defined in environment variables');
+  process.exit(1); // Exit the process if MONGODB_URI is not set
+}
 
 mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
