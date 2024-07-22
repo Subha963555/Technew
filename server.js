@@ -34,15 +34,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/yourdatabase', {
+mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
 .then(() => console.log('MongoDB connected'))
 .catch(err => console.log('Error connecting to MongoDB:', err));
 
-// Define routes
 app.post('/submit', submitHandler);
 app.post('/login', loginHandler);
 app.post('/logout', logoutHandler);
@@ -52,7 +50,6 @@ app.get('/home', verifyUser, homeHandler);
 app.post('/apply', verifyUser, applyHandler);
 app.get('/applied', verifyUser, getAppliedHandler);
 
-// Error handling for unhandled routes
 app.use((req, res, next) => {
   res.status(404).json({ message: 'Route not found' });
 });
