@@ -26,7 +26,7 @@ const {
 } = require('./Routes/handlers');
 
 const corsOptions = {
-  origin: 'https://techintern.onrender.com', 
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
   credentials: true,
 };
 
